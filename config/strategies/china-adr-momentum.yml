@@ -14,7 +14,6 @@ risk_management:
   max_position_size_percent: 3    # Decent size for established names
   stop_loss_percent: 6            # Moderate stop
   take_profit_percent: 15         # Good reward ratio
-  overnight_risk_limit: 0.5      # Half size for overnight holds
 
 # Entry conditions tailored for China stocks
 entry_conditions:

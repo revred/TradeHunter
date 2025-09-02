@@ -1,0 +1,54 @@
+name: "Biotech Momentum - SLRX"
+description: "FDA catalyst and volume momentum strategy for Solar Therapeutics"
+symbol: "SLRX"
+enabled: true
+
+risk_management:
+  budget_gbp: 800
+  risk_per_attempt_gbp: 40
+  max_position_size_percent: 2
+  stop_loss_percent: 12
+  take_profit_percent: 35
+
+entry_conditions:
+  - type: "volume_surge"
+    parameters:
+      timeframe: "5m"
+      volume_multiplier: 10.0
+      min_volume: 5000000
+      
+  - type: "price_momentum"
+    parameters:
+      timeframe: "1m"
+      momentum_threshold: 0.05
+      breakout_confirmation: true
+      
+  - type: "news_sentiment"
+    parameters:
+      keywords: ["FDA", "approval", "trial", "breakthrough", "positive", "data"]
+      sentiment_threshold: 0.8
+      news_age_hours: 24
+
+exit_conditions:
+  - type: "stop_loss"
+    parameters:
+      percent: 12
+      
+  - type: "take_profit"
+    parameters:
+      percent: 35
+      
+  - type: "momentum_exhaustion"
+    parameters:
+      volume_decline_threshold: 0.3
+      time_minutes: 30
+
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "financial_news_api"
+  
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 1.0

@@ -1,0 +1,53 @@
+name: "China ADR Momentum - CHNR"
+description: "Policy catalyst and overnight gap strategy for China Natural Resources"
+symbol: "CHNR"
+enabled: true
+
+risk_management:
+  budget_gbp: 750
+  risk_per_attempt_gbp: 75
+  max_position_size_percent: 3
+  stop_loss_percent: 6
+  take_profit_percent: 15
+
+entry_conditions:
+  - type: "volume_surge"
+    parameters:
+      timeframe: "15m"
+      volume_multiplier: 4.0
+      min_volume: 2000000
+      
+  - type: "price_momentum"
+    parameters:
+      timeframe: "15m"
+      momentum_threshold: 0.025
+      gap_up_minimum: 0.02
+      
+  - type: "news_sentiment"
+    parameters:
+      keywords: ["China", "stimulus", "policy", "support", "infrastructure", "reopening"]
+      sentiment_threshold: 0.7
+      news_age_hours: 48
+
+exit_conditions:
+  - type: "stop_loss"
+    parameters:
+      percent: 6
+      
+  - type: "take_profit"
+    parameters:
+      percent: 15
+      
+  - type: "time_based"
+    parameters:
+      max_hold_hours: 72
+
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "financial_news_api"
+  
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 0.3

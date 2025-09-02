@@ -11,10 +11,9 @@ enabled: true
 risk_management:
   budget_gbp: 800                 # Smaller budget - these are rockets
   risk_per_attempt_gbp: 40        # 5% max risk
-  max_position_size_percent: 1.5  # Tiny positions
+  max_position_size_percent: 2    # Small positions
   stop_loss_percent: 12           # Biotechs gap huge
   take_profit_percent: 35         # Swing for the fences
-  max_daily_trades: 2             # Limit exposure
 
 # Biotech-specific entry conditions
 entry_conditions:

@@ -14,7 +14,6 @@ risk_management:
   max_position_size_percent: 1    # Tiny positions - these rocket
   stop_loss_percent: 15           # Very wide stop
   take_profit_percent: 50         # Moon shot targets
-  max_daily_trades: 1             # One rocket per day
 
 # Entry conditions for squeeze setups
 entry_conditions:

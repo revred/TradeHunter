@@ -1,0 +1,66 @@
+name: "Master Momentum Hunter - 24 Symbols"
+description: "Adaptive momentum strategy optimized for high-volatility small-caps"
+symbol: "SUGP"
+enabled: true
+
+risk_management:
+  budget_gbp: 2000
+  risk_per_attempt_gbp: 60
+  max_position_size_percent: 2
+  stop_loss_percent: 10
+  take_profit_percent: 25
+
+entry_conditions:
+  # Volume is king - massive volume confirms momentum
+  - type: "volume_surge"
+    parameters:
+      timeframe: "5m"
+      volume_multiplier: 5.0
+      min_volume: 1000000
+      
+  # Price momentum - trend is your friend
+  - type: "price_momentum"
+    parameters:
+      timeframe: "5m"
+      momentum_threshold: 0.03
+      breakout_confirmation: true
+      
+  # News catalyst - news drives momentum
+  - type: "news_sentiment"
+    parameters:
+      keywords: ["earnings", "partnership", "contract", "FDA", "approval", "acquisition", "upgrade"]
+      sentiment_threshold: 0.7
+      news_age_hours: 48
+      
+  # Technical confirmation
+  - type: "technical_indicator"
+    parameters:
+      indicator: "vwap"
+      condition: "above"
+
+exit_conditions:
+  # Lock in profits quickly
+  - type: "take_profit"
+    parameters:
+      percent: 25
+      
+  # Protect capital
+  - type: "stop_loss"
+    parameters:
+      percent: 10
+      trailing: true
+      
+  # Don't be a bag holder
+  - type: "time_based"
+    parameters:
+      max_hold_hours: 72
+
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "financial_news_api"
+  
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 0.5

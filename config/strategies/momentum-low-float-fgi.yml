@@ -1,0 +1,54 @@
+name: "Low Float Squeeze - FGI"
+description: "Volume explosion and squeeze strategy for FGI Industries"
+symbol: "FGI"
+enabled: true
+
+risk_management:
+  budget_gbp: 600
+  risk_per_attempt_gbp: 30
+  max_position_size_percent: 1
+  stop_loss_percent: 15
+  take_profit_percent: 50
+
+entry_conditions:
+  - type: "volume_explosion"
+    parameters:
+      timeframe: "5m"
+      volume_multiplier: 20.0
+      min_volume: 3000000
+      
+  - type: "price_momentum"
+    parameters:
+      timeframe: "5m"
+      momentum_threshold: 0.08
+      breakout_confirmation: true
+      
+  - type: "technical_indicator"
+    parameters:
+      indicator: "vwap"
+      condition: "above"
+
+exit_conditions:
+  - type: "profit_ladder"
+    parameters:
+      first_target: 25
+      first_sell_percent: 50
+      
+  - type: "stop_loss"
+    parameters:
+      percent: 15
+      trailing: true
+      
+  - type: "intraday_exit"
+    parameters:
+      max_hold_minutes: 240
+
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "financial_news_api"
+  
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 2.0

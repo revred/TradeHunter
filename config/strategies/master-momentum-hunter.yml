@@ -22,9 +22,6 @@ risk_management:
   max_position_size_percent: 2    # Max 2% in any single position
   stop_loss_percent: 10           # Wide stop for volatility
   take_profit_percent: 25         # Swing for big moves
-  max_concurrent_positions: 4     # Diversify across symbols
-  max_daily_loss_gbp: 200        # Daily loss limit
-  sector_concentration_limit: 0.4  # Max 40% in any sector
 
 # Universal momentum entry conditions
 entry_conditions:

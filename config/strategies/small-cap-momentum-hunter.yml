@@ -11,11 +11,9 @@ enabled: true
 risk_management:
   budget_gbp: 1000               # Total allocation for small-caps
   risk_per_attempt_gbp: 50       # Only 5% per trade - these are risky!
-  max_position_size_percent: 2    # Never more than 2% in one position
-  stop_loss_percent: 8            # Wide stop for volatility
-  take_profit_percent: 20         # High reward target
-  max_daily_loss_gbp: 150        # Daily loss limit
-  max_concurrent_positions: 3     # Diversify across multiple
+  max_position_size_percent: 2   # Never more than 2% in one position
+  stop_loss_percent: 8           # Wide stop for volatility
+  take_profit_percent: 20        # High reward target
 
 # Entry conditions - ALL must be met for entry
 entry_conditions:
