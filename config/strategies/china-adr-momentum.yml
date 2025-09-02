@@ -1,0 +1,163 @@
+# China ADR Momentum Strategy
+# Specialized for Chinese stocks and ADRs with overnight gap potential
+# Focus: Policy changes, earnings, and China macro news
+
+name: "China ADR Momentum Hunter"
+description: "Captures momentum in Chinese stocks from policy and earnings news"
+symbol: "CHNR"  # China Natural Resources
+enabled: true
+
+# Risk management for China volatility
+risk_management:
+  budget_gbp: 750                 # Medium allocation
+  risk_per_attempt_gbp: 75        # 10% per trade
+  max_position_size_percent: 3    # Decent size for established names
+  stop_loss_percent: 6            # Moderate stop
+  take_profit_percent: 15         # Good reward ratio
+  overnight_risk_limit: 0.5      # Half size for overnight holds
+
+# Entry conditions tailored for China stocks
+entry_conditions:
+  # 1. Overnight gap analysis
+  - type: "overnight_gap"
+    parameters:
+      min_gap_percent: 2.0        # 2% minimum gap
+      direction: "up"             # Focus on gaps up
+      volume_confirmation: true   # Need volume
+      china_market_correlation: true # Check Shanghai/Shenzhen
+      
+  # 2. China-specific news
+  - type: "china_catalyst"
+    parameters:
+      policy_keywords:
+        bullish:
+          - "stimulus"
+          - "policy support"
+          - "regulatory clarity"
+          - "trade deal"
+          - "reopening"
+          - "infrastructure spending"
+          - "tax cuts"
+          - "monetary easing"
+        bearish_avoid:
+          - "crackdown"
+          - "investigation" 
+          - "regulatory pressure"
+          - "trade war"
+          - "sanctions"
+          - "delisting risk"
+      news_sources:
+        - "China Daily"
+        - "SCMP"
+        - "Bloomberg China"
+        - "Reuters China"
+        
+  # 3. Technical momentum
+  - type: "technical_momentum"
+    parameters:
+      timeframe: "15m"            # Medium-term momentum
+      rsi_range: [30, 70]         # Not extreme
+      macd_bullish: true          # MACD crossover
+      volume_above_average: 2.0   # 2x average volume
+      
+  # 4. Correlation check
+  - type: "correlation_filter"
+    parameters:
+      benchmark_etfs:
+        - "KWEB"                  # China internet
+        - "FXI"                   # China large cap
+        - "ASHR"                  # China A-shares
+      min_correlation: 0.3        # Some correlation required
+      relative_strength: true     # Outperforming sector
+      
+  # 5. Market timing
+  - type: "market_timing"
+    parameters:
+      us_market_open: true        # Trade US hours
+      china_market_status: "check" # Monitor China market
+      earnings_season_boost: true # Earnings catalysts
+      avoid_china_holidays: true  # Skip holiday periods
+
+# Exit conditions
+exit_conditions:
+  # 1. Profit targets
+  - type: "staged_exits"
+    parameters:
+      first_target: 8             # Take some at 8%
+      first_amount: 0.4           # Sell 40%
+      second_target: 15           # Take more at 15%
+      second_amount: 0.4          # Sell 40%
+      final_target: 25            # Runner target
+      
+  # 2. Stop loss with gaps
+  - type: "gap_aware_stop"
+    parameters:
+      percent: 6                  # 6% stop
+      gap_protection: true        # Handle overnight gaps
+      pre_market_monitoring: true # Watch pre-market
+      
+  # 3. Time-based exits
+  - type: "time_management"
+    parameters:
+      max_hold_days: 3           # Short-term trades
+      avoid_overnight_friday: true # No weekend risk
+      earnings_exit: "day_after"  # Exit day after earnings
+      
+  # 4. Reversal patterns
+  - type: "reversal_detection"
+    parameters:
+      volume_climax: true         # High volume reversal
+      technical_breakdown: true   # Break key support
+      negative_china_news: true   # Bad policy news
+
+# Symbol-specific settings
+china_symbols:
+  CHNR:  # China Natural Resources
+    sector: "commodities"
+    key_drivers: ["China infrastructure", "commodity prices"]
+    correlation_assets: ["copper", "steel", "iron ore"]
+    
+  NAAS:  # NaaS Technology
+    sector: "EV charging"
+    key_drivers: ["EV adoption", "charging infrastructure"]
+    correlation_assets: ["NIO", "XPEV", "LI"]
+    growth_stage: "early"
+    
+  BAOS:  # Baosheng Media Group
+    sector: "media/entertainment"
+    key_drivers: ["content licensing", "streaming growth"]
+    correlation_assets: ["NTES", "BILI"]
+    regulatory_risk: "high"
+
+# China market integration
+china_market_data:
+  shanghai_composite: "monitor"
+  shenzhen_component: "monitor"
+  hang_seng: "correlate"
+  yuan_exchange_rate: "factor"
+  
+# Overnight risk management
+overnight_controls:
+  position_sizing_factor: 0.5     # Half size for overnight
+  earnings_week_reduction: 0.3    # Even smaller during earnings
+  policy_announcement_days: 0.2   # Tiny during policy meetings
+  
+# News sources and timing
+news_timing:
+  china_market_hours: "21:30-04:00" # Beijing time in EST
+  us_china_overlap: "21:30-16:00"   # Key overlap period
+  weekend_policy_risk: true         # China announces weekends
+  
+# Additional filters
+china_specific_filters:
+  adr_ratio_check: true           # ADR vs underlying
+  hong_kong_correlation: true     # HK market influence  
+  regulatory_calendar: true       # Track policy meetings
+  trade_news_sensitivity: true    # US-China relations
+
+trading:
+  mode: "demo"
+  broker: "simulator" 
+  order_type: "limit"
+  limit_offset_percent: 0.3       # Decent liquidity
+  extended_hours: true            # Need pre/post market

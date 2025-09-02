@@ -1,0 +1,232 @@
+# Master Momentum Hunter Strategy
+# Hunts ALL the provided symbols with adaptive rules
+# Momentum is everything - News drives momentum - Volume confirms momentum
+
+name: "Master Momentum Hunter - Multi-Symbol"
+description: "Adaptive momentum strategy for 24 high-potential symbols"
+symbol: "SUGP"  # Will rotate through all symbols
+enabled: true
+
+# Target symbols with categorization
+target_symbols:
+  biotech_pharma: ["SLRX", "BREA", "LICN", "AKAN", "NDRA", "CNSP", "UPC", "SLGL", "TIVC"]
+  china_adr: ["CHNR", "NAAS", "BAOS"]
+  low_float_squeeze: ["SUGP", "FGI", "JFBR", "MDRR", "CISS", "BBGI", "LDWY", "NAOV", "PRTG", "CLRO"]
+  spac_merger: ["SUGP"]
+  tech_software: ["NSYS", "CLRO", "DRMA"]
+
+# Conservative risk for high-volatility hunting
+risk_management:
+  budget_gbp: 2000                # Total hunting budget
+  risk_per_attempt_gbp: 60        # 3% per trade
+  max_position_size_percent: 2    # Max 2% in any single position
+  stop_loss_percent: 10           # Wide stop for volatility
+  take_profit_percent: 25         # Swing for big moves
+  max_concurrent_positions: 4     # Diversify across symbols
+  max_daily_loss_gbp: 200        # Daily loss limit
+  sector_concentration_limit: 0.4  # Max 40% in any sector
+
+# Universal momentum entry conditions
+entry_conditions:
+  # 1. VOLUME IS KING - Most important filter
+  - type: "volume_explosion"
+    parameters:
+      min_absolute_volume: 1000000 # 1M shares minimum
+      volume_multiplier: 4.0       # 4x average volume
+      intraday_volume_spike: true  # Must spike during day
+      compare_periods: [5, 10, 20] # Compare to multiple periods
+      
+  # 2. PRICE MOMENTUM - The trend is your friend
+  - type: "momentum_cascade"
+    parameters:
+      timeframes: ["5m", "15m", "1h"] # Multi-timeframe alignment
+      momentum_threshold: 0.03     # 3% minimum move
+      breakout_required: true      # Must break resistance
+      trend_alignment: true        # All timeframes aligned
+      
+  # 3. NEWS CATALYST - News drives momentum
+  - type: "news_momentum_driver"
+    parameters:
+      news_required: true          # MUST have fresh news
+      max_age_hours: 48           # News within 48 hours
+      positive_catalyst_weight: 2.0 # Weight positive news higher
+      universal_catalysts:         # Works for all stocks
+        - "earnings beat"
+        - "revenue guidance raise"
+        - "partnership"
+        - "contract win" 
+        - "acquisition"
+        - "merger"
+        - "analyst upgrade"
+        - "insider buying"
+        - "share buyback"
+        - "dividend increase"
+      sector_specific_catalysts:
+        biotech: ["FDA", "approval", "trial", "data", "breakthrough"]
+        china: ["policy", "stimulus", "reopening", "support"]
+        tech: ["AI", "cloud", "SaaS", "growth", "expansion"]
+        
+  # 4. TECHNICAL CONFIRMATION - Momentum needs confirmation
+  - type: "technical_momentum_stack"
+    parameters:
+      rsi_range: [25, 75]         # Not extreme
+      macd_bullish_crossover: true # MACD momentum
+      price_above_vwap: true      # Above VWAP
+      bollinger_upper_approach: true # Approaching upper band
+      volume_price_trend_up: true  # VPT rising
+      
+  # 5. MARKET CONDITIONS - Don't fight the Fed
+  - type: "market_regime_filter"
+    parameters:
+      spy_trend: "up_or_neutral"   # Market not crashing
+      vix_max: 40                 # Not in panic mode
+      sector_rotation_check: true  # Sector in favor
+      time_filters:
+        avoid_first_15_min: true   # Avoid opening volatility
+        avoid_last_30_min: true    # Avoid closing games
+        
+  # 6. SYMBOL-SPECIFIC FILTERS
+  - type: "adaptive_symbol_filter"
+    parameters:
+      biotech_symbols:
+        extra_volume_required: 2.0 # Need extra volume
+        pre_market_activity: true  # Check pre-market
+        halt_risk_awareness: true  # Expect halts
+      china_symbols:
+        overnight_gap_factor: true # Check Asian markets
+        policy_news_weight: 2.0    # Policy news important
+        correlation_check: "FXI"   # China ETF correlation
+      low_float_symbols:
+        short_interest_check: true # High short interest good
+        float_percentage_traded: 0.3 # 30% of float trading
+
+# Momentum-based exit strategy
+exit_conditions:
+  # 1. PROFIT TAKING - Sell into strength
+  - type: "momentum_profit_cascade"
+    parameters:
+      quick_scalp_target: 8       # Quick 8% scalp
+      quick_scalp_amount: 0.3     # Take 30%
+      momentum_target: 15         # Strong momentum target
+      momentum_amount: 0.4        # Take 40% 
+      runner_target: 25           # Let 30% run
+      moon_shot_target: 50        # Rare but possible
+      
+  # 2. MOMENTUM EXHAUSTION - When party's over
+  - type: "momentum_death_signals"
+    parameters:
+      volume_cliff: 0.3           # Volume drops 70%
+      price_stall_minutes: 20     # No new highs 20 mins
+      reversal_candle_pattern: true # Shooting star, etc.
+      technical_breakdown: true    # Break key support
+      negative_news: true         # Bad news trumps all
+      
+  # 3. STOP LOSS - Protect capital
+  - type: "adaptive_stop_loss"
+    parameters:
+      initial_stop: 10            # 10% initial stop
+      trail_activation: 12        # Start trailing at 12%
+      trail_percent: 6            # 6% trailing stop
+      volatility_adjustment: true # Wider stops for volatile
+      news_gap_protection: true   # Protect from news gaps
+      
+  # 4. TIME MANAGEMENT - Don't be a bag holder
+  - type: "time_decay_management"
+    parameters:
+      max_hold_hours: 72         # 3 days maximum
+      earnings_week_exit: true    # Exit before earnings
+      weekend_position_limit: 0.5 # Half size over weekend
+      holiday_exit_required: true # Exit before holidays
+
+# Symbol rotation and selection
+symbol_rotation:
+  # Scan all symbols every 5 minutes
+  scan_frequency: "5m"
+  # Rank by momentum score
+  momentum_scoring:
+    volume_weight: 0.4            # 40% volume
+    price_momentum_weight: 0.3    # 30% price move
+    news_catalyst_weight: 0.2     # 20% news quality
+    technical_weight: 0.1         # 10% technicals
+  # Trade top 3 ranked symbols
+  max_active_symbols: 3
+  # Minimum score to trade
+  min_momentum_score: 7.0         # Out of 10
+
+# Advanced features
+advanced_features:
+  # Social sentiment integration
+  social_sentiment:
+    stocktwits_bullish_ratio: ">0.6" # >60% bullish
+    reddit_mention_spike: true    # Trending on Reddit
+    twitter_hashtag_volume: true  # High hashtag activity
+    
+  # Options flow integration (if available)
+  options_flow:
+    unusual_call_activity: true   # Unusual call buying
+    high_implied_volatility: true # IV expansion
+    put_call_ratio_extreme: true  # Extreme ratios
+    
+  # Institutional activity
+  institutional_signals:
+    insider_buying: true          # Recent insider buying
+    institutional_accumulation: true # Smart money buying
+    analyst_upgrades: true        # Fresh upgrades
+    
+  # Correlation analysis
+  correlation_monitoring:
+    sector_relative_strength: true # Outperforming sector
+    beta_analysis: true           # High beta preferred
+    momentum_factor_loading: true # Momentum factor exposure
+
+# Real-time alerts and monitoring
+alert_system:
+  entry_signals:
+    - "Volume explosion detected"
+    - "News catalyst confirmed"
+    - "Technical breakout imminent"
+  exit_signals:
+    - "Momentum exhaustion warning"
+    - "Technical breakdown alert"
+    - "Profit target reached"
+  risk_alerts:
+    - "Stop loss triggered"
+    - "Daily loss limit approaching"
+    - "Unusual price action"
+
+# Performance tracking
+performance_analytics:
+  track_by_symbol: true           # Individual symbol performance
+  track_by_strategy_type: true    # Biotech vs China vs Low Float
+  track_by_time_of_day: true      # Best trading times
+  track_by_news_type: true        # Which catalysts work best
+  win_rate_target: 0.45          # Target 45% win rate
+  profit_factor_target: 1.8      # Target 1.8 profit factor
+  max_drawdown_limit: 0.15       # 15% max drawdown
+
+# Trading configuration
+trading:
+  mode: "demo"                    # ALWAYS TEST FIRST!
+  broker: "simulator"
+  order_type: "limit"             # Never market orders
+  limit_offset_percent: 0.5       # Smart limit pricing
+  partial_fills_acceptable: true  # Take partial fills
+  extended_hours: true            # Pre/post market trading
+  
+# Strategy notes
+notes: |
+  This is a HIGH-RISK, HIGH-REWARD momentum strategy designed for experienced traders.
+  
+  Key Principles:
+  1. VOLUME CONFIRMS EVERYTHING - No volume, no trade
+  2. NEWS DRIVES MOMENTUM - Fresh catalysts are essential  
+  3. RIDE THE WAVE - Don't fight momentum
+  4. CUT LOSSES FAST - Momentum can reverse quickly
+  5. TAKE PROFITS INTO STRENGTH - Bulls make money, bears make money, pigs get slaughtered
+  
+  Symbol Categories:
+  - Biotech: Binary outcomes, FDA catalysts, high volatility
+  - China ADR: Policy sensitive, overnight gaps, correlation plays
+  - Low Float: Squeeze potential, social media driven, explosive moves
+  
+  Remember: These are speculative stocks. Never risk more than you can afford to lose!

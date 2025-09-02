@@ -1,0 +1,201 @@
+# Low Float Squeeze Strategy
+# Hunt stocks with small floats that can squeeze on volume
+# Focus: SUGP, FGI, CNSP, JFBR, UPC, MDRR, CISS, SLGL, BBGI, LDWY, NAOV, PRTG, TIVC
+
+name: "Low Float Squeeze Hunter"
+description: "Hunts explosive moves in low float stocks with squeeze potential"
+symbol: "FGI"  # FGI Industries - low float example
+enabled: true
+
+# Aggressive risk management for explosive moves
+risk_management:
+  budget_gbp: 600                 # Smaller budget - high risk
+  risk_per_attempt_gbp: 30        # 5% risk per trade
+  max_position_size_percent: 1    # Tiny positions - these rocket
+  stop_loss_percent: 15           # Very wide stop
+  take_profit_percent: 50         # Moon shot targets
+  max_daily_trades: 1             # One rocket per day
+
+# Entry conditions for squeeze setups
+entry_conditions:
+  # 1. Volume explosion - THE key signal
+  - type: "volume_nuclear"
+    parameters:
+      min_volume: 2000000         # 2M+ shares minimum
+      volume_multiplier: 20.0     # 20x average (insane volume)
+      intraday_surge: true        # Volume must spike intraday
+      unusual_activity_alert: true # Trigger on unusual activity
+      
+  # 2. Float analysis
+  - type: "float_squeeze_setup"
+    parameters:
+      max_float: 20000000         # <20M float
+      shares_traded_vs_float: 0.5 # 50% of float traded
+      short_interest_high: true   # >20% short interest
+      days_to_cover: 3            # 3+ days to cover shorts
+      insider_lockup_end: false   # Avoid lockup endings
+      
+  # 3. Price action setup
+  - type: "squeeze_price_action"
+    parameters:
+      consolidation_break: true   # Breaking consolidation
+      resistance_break: true      # Above key resistance
+      momentum_threshold: 0.08    # 8% move minimum
+      no_recent_dilution: true    # No recent share offerings
+      
+  # 4. Technical indicators
+  - type: "squeeze_technicals"
+    parameters:
+      bollinger_squeeze: true     # Bollinger bands tight
+      volume_price_trend: "up"    # VPT rising
+      money_flow_index: ">50"     # Money flowing in
+      on_balance_volume: "rising" # OBV trending up
+      
+  # 5. News/catalyst check
+  - type: "catalyst_confirmation"
+    parameters:
+      catalyst_required: true     # Must have news
+      catalyst_types:
+        - "earnings surprise"
+        - "contract win"
+        - "partnership"
+        - "acquisition rumor"
+        - "analyst upgrade"
+        - "product launch"
+        - "FDA progress"
+        - "patent approval"
+      social_buzz: true           # StockTwits/Reddit activity
+
+# Exit conditions - Lock in gains fast
+exit_conditions:
+  # 1. Profit ladder (sell into strength)
+  - type: "profit_ladder"
+    parameters:
+      ladder_25_percent:          # 25% gain
+        sell_amount: 0.25         # Sell 25% of position
+      ladder_50_percent:          # 50% gain  
+        sell_amount: 0.35         # Sell 35% of position
+      ladder_100_percent:         # 100% gain
+        sell_amount: 0.25         # Sell 25% of position
+      runner_amount: 0.15         # Keep 15% as runner
+      
+  # 2. Momentum exhaustion
+  - type: "squeeze_exhaustion"
+    parameters:
+      volume_decline: 0.4         # Volume drops 60%
+      price_stall_minutes: 15     # No new highs for 15 mins
+      profit_taking_volume: true  # Heavy selling volume
+      
+  # 3. Stop loss
+  - type: "trailing_stop"
+    parameters:
+      initial_stop: 15            # 15% initial stop
+      trail_after_gain: 20        # Start trailing at 20% gain
+      trail_percent: 8            # 8% trailing stop
+      
+  # 4. Time limits
+  - type: "intraday_exit"
+    parameters:
+      max_hold_minutes: 240       # 4 hours max hold
+      exit_before_close: true     # Don't hold overnight
+      halt_exit_strategy: true    # Plan for halts
+
+# Low float specific symbols and setups
+low_float_symbols:
+  SUGP:  # Sugar Creek Acquisition
+    float_estimate: 15000000      # ~15M float
+    key_catalyst: "SPAC merger completion"
+    squeeze_history: "high"       # History of squeezes
+    
+  FGI:   # FGI Industries  
+    float_estimate: 8000000       # ~8M float
+    key_catalyst: "defense contracts"
+    sector_rotation: "defense"    # Defense sector plays
+    
+  CNSP:  # CNS Pharmaceuticals
+    float_estimate: 12000000      # ~12M float
+    key_catalyst: "cancer drug trials"
+    biotech_risk: "extreme"       # Binary outcomes
+    
+  JFBR:  # Jeffs' Brands
+    float_estimate: 18000000      # ~18M float
+    key_catalyst: "e-commerce growth"
+    international_factor: true   # Israeli company
+    
+  UPC:   # Universe Pharmaceuticals
+    float_estimate: 10000000      # ~10M float
+    key_catalyst: "TCM approvals"
+    china_regulatory_risk: true   # China pharma
+    
+  MDRR:  # Medalist Diversified REIT
+    float_estimate: 6000000       # ~6M float
+    key_catalyst: "property acquisitions"
+    reit_dividend_factor: true    # REIT dynamics
+    
+  SLGL:  # Sol-Gel Technologies
+    float_estimate: 22000000      # ~22M float
+    key_catalyst: "dermatology drugs"
+    israeli_biotech: true         # Israeli biotech
+    
+  TIVC:  # Tivic Health Systems
+    float_estimate: 5000000       # ~5M float
+    key_catalyst: "ClearUP device sales"
+    medical_device_risk: true     # Device approval risk
+
+# Squeeze detection algorithm
+squeeze_detection:
+  bollinger_band_squeeze:         # BB bands tighten
+    period: 20
+    std_dev: 2
+    squeeze_ratio: 0.1            # Bands within 10% of normal
+    
+  keltner_channel_squeeze:        # KC squeeze
+    period: 20
+    multiplier: 1.5
+    
+  volume_dry_up:                  # Volume dries up before explosion
+    lookback_days: 5
+    volume_threshold: 0.3         # 70% below average
+    
+  short_interest_data:            # Track short interest
+    update_frequency: "bi_monthly"
+    threshold_high: 20            # >20% short interest
+    days_to_cover_min: 2          # 2+ days to cover
+
+# Risk controls for explosive moves
+squeeze_risk_controls:
+  halt_protection:                # Handle trading halts
+    position_exit_on_halt: 0.5    # Exit 50% on halt
+    halt_resume_strategy: "wait"   # Wait for stability
+    
+  circuit_breaker_awareness:      # Stock circuit breakers
+    level_1_plan: "hold"          # 5% move
+    level_2_plan: "partial_exit"  # 10% move
+    level_3_plan: "full_exit"     # 20% move
+    
+  liquidity_monitoring:           # Watch bid/ask spreads
+    max_spread_percent: 5         # 5% max spread
+    min_bid_size: 1000            # 1000 shares min bid
+    
+  correlation_breaks:             # When correlations break
+    sector_divergence_limit: 0.2   # 20% max divergence
+
+# Social sentiment integration
+social_monitoring:
+  stocktwits_sentiment: true      # Monitor StockTwits
+  reddit_mentions: true           # r/pennystocks, r/stocks
+  twitter_hashtags: true          # Stock-specific hashtags
+  discord_alerts: true            # Trading Discord channels
+  
+# Pre-market and after-hours
+extended_hours_strategy:
+  pre_market_monitoring: true     # 4:00-9:30 AM
+  after_hours_monitoring: true    # 4:00-8:00 PM
+  overnight_news_scan: true       # Scan overnight news
+  
+trading:
+  mode: "demo"                    # TEST THESE FIRST!
+  broker: "simulator"
+  order_type: "limit"             # Never market orders on low floats
+  limit_offset_percent: 2.0       # Wide spreads expected
+  partial_fills_ok: true          # Take what you can get

@@ -1,0 +1,167 @@
+# Biotech Catalyst Hunter Strategy
+# Specialized for FDA approvals, trial data, and biotech catalysts
+# High risk/reward - biotech can move 100%+ on news
+
+name: "Biotech Catalyst Hunter"
+description: "Hunts FDA approvals, trial results, and biotech catalysts"
+symbol: "SLRX"  # Solar Therapeutics - example biotech
+enabled: true
+
+# Ultra-conservative risk for biotech volatility
+risk_management:
+  budget_gbp: 800                 # Smaller budget - these are rockets
+  risk_per_attempt_gbp: 40        # 5% max risk
+  max_position_size_percent: 1.5  # Tiny positions
+  stop_loss_percent: 12           # Biotechs gap huge
+  take_profit_percent: 35         # Swing for the fences
+  max_daily_trades: 2             # Limit exposure
+
+# Biotech-specific entry conditions
+entry_conditions:
+  # 1. Volume explosion (biotechs spike on news)
+  - type: "volume_explosion"
+    parameters:
+      min_volume: 5000000         # 5M+ shares
+      volume_multiplier: 10.0     # 10x normal volume
+      pre_market_volume: true     # Include pre-market
+      
+  # 2. Price momentum
+  - type: "biotech_momentum"
+    parameters:
+      timeframe: "1m"             # Very fast moves
+      momentum_threshold: 0.05    # 5% minimum move
+      gap_up_min: 0.10            # 10% gap preferred
+      
+  # 3. FDA/Trial news detection
+  - type: "biotech_catalyst"
+    parameters:
+      catalyst_keywords:
+        high_priority:            # Immediate buy signals
+          - "FDA approval"
+          - "FDA authorization"
+          - "breakthrough therapy"
+          - "fast track"
+          - "orphan drug"
+          - "positive trial"
+          - "primary endpoint met"
+          - "statistically significant"
+        medium_priority:          # Wait for confirmation
+          - "FDA submission"
+          - "clinical trial"
+          - "interim data"
+          - "partnership"
+          - "licensing deal"
+      news_sources:
+        - "FDA.gov"
+        - "ClinicalTrials.gov"
+        - "BioPharma Dive"
+        - "FiercePharma"
+        - "company press releases"
+        
+  # 4. Technical confirmation
+  - type: "technical_setup"
+    parameters:
+      rsi_min: 25                 # Oversold bounce
+      rsi_max: 75                 # Not overbought
+      bollinger_breakout: true    # Breaking upper band
+      
+  # 5. Float analysis
+  - type: "float_analysis"
+    parameters:
+      max_float: 50000000         # <50M shares
+      short_interest_check: true  # High short = squeeze potential
+      insider_ownership_min: 0.1  # 10% insider ownership
+
+# Exit conditions - Biotechs can crash fast
+exit_conditions:
+  # 1. Profit taking in stages
+  - type: "staged_profit_taking"
+    parameters:
+      stage_1:                    # 15% gain
+        percent: 15
+        sell_amount: 0.3          # Sell 30%
+      stage_2:                    # 25% gain
+        percent: 25
+        sell_amount: 0.4          # Sell 40%
+      stage_3:                    # 35% gain
+        percent: 35
+        sell_amount: 0.3          # Sell remaining 30%
+        
+  # 2. Stop loss
+  - type: "biotech_stop"
+    parameters:
+      percent: 12                 # Wide for volatility
+      halt_protection: true       # Handle trading halts
+      after_hours_gaps: true      # Watch AH moves
+      
+  # 3. Momentum reversal
+  - type: "reversal_signals"
+    parameters:
+      volume_exhaustion: 0.2      # Volume drops 80%
+      negative_news: true         # Exit on bad news
+      technical_breakdown: true   # Below key support
+      
+  # 4. Time decay
+  - type: "catalyst_time_decay"
+    parameters:
+      max_hold_hours: 72         # 3 days max
+      decay_after_catalyst: 24   # Exit 24h after catalyst
+
+# Symbol-specific configurations
+biotech_symbols:
+  SLRX:  # Solar Therapeutics
+    focus: "oncology trials"
+    key_catalysts: ["Phase II data", "FDA meeting"]
+    peak_volatility_hours: ["08:30-10:00", "16:00-20:00"]
+    
+  BREA:  # Brea Holdings
+    focus: "respiratory treatments"  
+    key_catalysts: ["inhalation technology", "partnerships"]
+    european_market_factor: true
+    
+  LICN:  # Lichen China
+    focus: "traditional medicine"
+    key_catalysts: ["China FDA", "TCM approvals"]
+    china_market_correlation: true
+    
+  AKAN:  # Akanda Corp
+    focus: "cannabis research"
+    key_catalysts: ["cultivation licenses", "export deals"]
+    regulatory_risk: "high"
+    
+  NDRA:  # ENDRA Life Sciences
+    focus: "medical imaging"
+    key_catalysts: ["THERMO technology", "partnerships"]
+    device_approval_pathway: true
+
+# Pre-market and after-hours trading
+extended_hours:
+  pre_market: true                # Biotechs move pre-market
+  after_hours: true               # Continue watching
+  halt_monitoring: true           # Track trading halts
+  
+# News monitoring
+news_monitoring:
+  real_time_feeds:
+    - "FDA RSS feeds"
+    - "Company IR pages"
+    - "SEC filings"
+    - "ClinicalTrials.gov"
+  social_sentiment:
+    - "StockTwits"
+    - "Twitter biotech hashtags"
+    - "Reddit r/biotechinvestor"
+    
+# Risk controls specific to biotechs
+biotech_risk_controls:
+  halt_position_sizing: 0.5       # Half size if halt risk
+  binary_event_protection: true   # These are all-or-nothing
+  correlation_check: "XBI"        # Biotech ETF correlation
+  sector_rotation_awareness: true # Biotech in/out of favor
+
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 1.0       # Wide spreads in biotechs
+  partial_fills: true             # Take what you can get

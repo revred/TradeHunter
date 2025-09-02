@@ -1,0 +1,166 @@
+# Small-Cap Momentum Hunter Strategy
+# Designed for volatile small-cap stocks with news catalysts
+# CRITICAL: These are high-risk trades - use strict position sizing!
+
+name: "Small-Cap Momentum Hunter"
+description: "Hunts explosive momentum in small-cap stocks driven by news and volume"
+symbol: "SUGP"  # Default symbol - will be overridden per stock
+enabled: true
+
+# Conservative risk management for volatile small-caps
+risk_management:
+  budget_gbp: 1000               # Total allocation for small-caps
+  risk_per_attempt_gbp: 50       # Only 5% per trade - these are risky!
+  max_position_size_percent: 2    # Never more than 2% in one position
+  stop_loss_percent: 8            # Wide stop for volatility
+  take_profit_percent: 20         # High reward target
+  max_daily_loss_gbp: 150        # Daily loss limit
+  max_concurrent_positions: 3     # Diversify across multiple
+
+# Entry conditions - ALL must be met for entry
+entry_conditions:
+  # 1. Volume explosion - THE MOST IMPORTANT SIGNAL
+  - type: "volume_surge"
+    parameters:
+      min_volume: 1000000         # Minimum 1M shares
+      volume_multiplier: 5.0      # Must be 5x average
+      compare_to_average: 20      # 20-day average
+      time_window: "30m"          # Volume surge within 30 minutes
+      
+  # 2. Price momentum confirmation
+  - type: "price_momentum"
+    parameters:
+      timeframe: "5m"             # Quick timeframe for scalping
+      momentum_threshold: 0.03    # 3% move minimum
+      breakout_confirmation: true # Must break previous high
+      min_price: 0.50             # Avoid trip-zero stocks
+      max_price: 20.00            # Focus on small-caps
+      
+  # 3. News catalyst check
+  - type: "news_catalyst"
+    parameters:
+      required: true              # MUST have news
+      max_age_hours: 24          # Fresh news only
+      positive_keywords:          # Bullish triggers
+        - "FDA"
+        - "approval"
+        - "breakthrough"
+        - "contract"
+        - "partnership"
+        - "merger"
+        - "acquisition"
+        - "earnings beat"
+        - "upgrade"
+        - "patent"
+        - "authorization"
+        - "clinical trial"
+        - "positive results"
+        - "expansion"
+        - "milestone"
+      negative_keywords:          # Avoid these
+        - "delisting"
+        - "bankruptcy"
+        - "investigation"
+        - "SEC"
+        - "fraud"
+        - "lawsuit"
+        - "recall"
+        
+  # 4. Technical setup
+  - type: "technical_indicator"
+    parameters:
+      indicator: "vwap"
+      condition: "above"          # Price must be above VWAP
+      
+  # 5. Market regime filter
+  - type: "market_filter"
+    parameters:
+      spy_trend: "neutral_or_up"  # Avoid trading in crashes
+      vix_max: 35                 # Skip high fear days
+      time_of_day: "09:45-15:30"  # Avoid first/last 15 mins
+
+# Exit conditions - ANY triggers exit
+exit_conditions:
+  # 1. Stop loss - RESPECT THIS!
+  - type: "stop_loss"
+    parameters:
+      percent: 8
+      trailing: false             # Fixed stop for gaps
+      
+  # 2. Profit target
+  - type: "take_profit"
+    parameters:
+      percent: 20                 # First target
+      partial_exit: 0.5           # Sell half
+      
+  # 3. Momentum exhaustion
+  - type: "momentum_exhaustion"
+    parameters:
+      volume_decline: 0.3         # Volume drops 70%
+      price_stall_minutes: 30     # No new highs for 30 mins
+      
+  # 4. Time-based exit
+  - type: "time_exit"
+    parameters:
+      max_hold_hours: 48         # Don't hold over 2 days
+      eod_exit: true              # Exit before close
+      
+  # 5. Technical breakdown
+  - type: "technical_breakdown"
+    parameters:
+      vwap_break: true            # Exit if breaks below VWAP
+      support_break: true         # Exit on support break
+
+# Data sources
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "benzinga"           # Good for small-caps
+  social_feed: "stocktwits"       # Sentiment gauge
+  
+# Trading configuration
+trading:
+  mode: "demo"                    # ALWAYS TEST FIRST!
+  broker: "simulator"
+  order_type: "limit"             # Never use market orders
+  limit_offset_percent: 0.5       # Aggressive fills needed
+  
+# Special rules for different symbol categories
+symbol_specific_rules:
+  # Biotech/Pharma (SLRX, BREA, LICN, AKAN, NDRA)
+  biotech:
+    symbols: ["SLRX", "BREA", "LICN", "AKAN", "NDRA"]
+    extra_keywords: ["FDA", "trial", "data", "approval", "endpoint"]
+    pre_market_trading: true       # Biotechs move pre-market
+    halt_risk_management: true     # Expect halts
+    
+  # China/ADR stocks (CHNR, NAAS, BAOS)
+  china_adr:
+    symbols: ["CHNR", "NAAS", "BAOS"]
+    overnight_gap_filter: true     # China news overnight
+    correlation_check: "KWEB"      # China ETF correlation
+    policy_news_weight: 2.0        # Policy news matters more
+    
+  # Tech/Software (NSYS, CLRO, DRMA)
+  tech:
+    symbols: ["NSYS", "CLRO", "DRMA"]
+    earnings_season_boost: true    # Tech earnings matter
+    guidance_keywords: ["guidance", "outlook", "forecast"]
+    
+  # Energy/Commodities (SUGP, UPC)
+  commodities:
+    symbols: ["SUGP", "UPC"]
+    commodity_correlation: true    # Check underlying commodity
+    macro_news_weight: 1.5         # Fed/macro matters
+    
+# Alert configuration
+alerts:
+  discord_webhook: true           # Get instant alerts
+  email_notifications: false
+  sms_for_entries: true          # Text on entry
+  
+# Performance tracking
+performance:
+  track_by_symbol: true
+  track_by_time: true
+  export_trades: true
+  journal_notes: true
