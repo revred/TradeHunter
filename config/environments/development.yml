@@ -1,0 +1,32 @@
+environment: "development"
+description: "Development environment configuration"
+
+data_sources:
+  primary_feed: "yahoo_finance"
+  backup_feed: "alpha_vantage"
+  news_feed: "financial_news_api"
+  
+market_hours:
+  pre_market_start: "04:00"
+  market_open: "09:30"
+  market_close: "16:00"
+  after_hours_end: "20:00"
+  timezone: "EST"
+
+risk_defaults:
+  max_portfolio_risk_percent: 2.0
+  max_single_position_risk_percent: 0.5
+  default_stop_loss_percent: 3.0
+  default_take_profit_percent: 8.0
+
+trading:
+  demo_mode: true
+  paper_trading: true
+  max_concurrent_positions: 5
+  min_time_between_trades_minutes: 15
+
+logging:
+  level: "debug"
+  console_output: true
+  file_output: true
+  trade_journal: true

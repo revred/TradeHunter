@@ -1,0 +1,39 @@
+environment: "production"
+description: "Production environment configuration"
+
+data_sources:
+  primary_feed: "interactive_brokers"
+  backup_feed: "alpha_vantage"
+  news_feed: "bloomberg_api"
+  
+market_hours:
+  pre_market_start: "04:00"
+  market_open: "09:30"
+  market_close: "16:00"
+  after_hours_end: "20:00"
+  timezone: "EST"
+
+risk_defaults:
+  max_portfolio_risk_percent: 1.0
+  max_single_position_risk_percent: 0.25
+  default_stop_loss_percent: 2.0
+  default_take_profit_percent: 6.0
+
+trading:
+  demo_mode: false
+  paper_trading: false
+  max_concurrent_positions: 3
+  min_time_between_trades_minutes: 30
+  order_confirmation_required: true
+
+logging:
+  level: "info"
+  console_output: false
+  file_output: true
+  trade_journal: true
+  audit_trail: true
+
+alerts:
+  email_notifications: true
+  sms_notifications: true
+  slack_webhook: true

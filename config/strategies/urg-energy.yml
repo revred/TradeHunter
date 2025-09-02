@@ -1,0 +1,52 @@
+name: "UR-Energy Trading Strategy"
+description: "Rules-based hunting strategy for URG stock"
+symbol: "URG"
+enabled: true
+
+risk_management:
+  budget_gbp: 500
+  risk_per_attempt_gbp: 50
+  max_position_size_percent: 10
+  stop_loss_percent: 5
+  take_profit_percent: 15
+
+entry_conditions:
+  - type: "price_momentum"
+    parameters:
+      timeframe: "1h"
+      momentum_threshold: 0.02
+      volume_increase: 1.5
+  
+  - type: "news_sentiment"
+    parameters:
+      keywords: ["uranium", "nuclear", "energy", "mining"]
+      sentiment_threshold: 0.7
+      news_age_hours: 24
+  
+  - type: "technical_indicator"
+    parameters:
+      indicator: "rsi"
+      value: 30
+      condition: "below"
+
+exit_conditions:
+  - type: "stop_loss"
+    parameters:
+      percent: 5
+  
+  - type: "take_profit"
+    parameters:
+      percent: 15
+  
+  - type: "time_based"
+    parameters:
+      max_hold_hours: 168
+
+data_sources:
+  price_feed: "yahoo_finance"
+  news_feed: "financial_news_api"
+  
+trading:
+  mode: "demo" # demo or live
+  broker: "simulator"
+  order_type: "market"

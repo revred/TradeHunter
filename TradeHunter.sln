@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeHunter", "src\TradeHunter.csproj", "{A32338FD-10C9-0F1F-0719-B3AA873BC6A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeHunter.Tests", "tests\unit\TradeHunter.Tests.csproj", "{B1234567-89AB-CDEF-0123-456789ABCDEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A32338FD-10C9-0F1F-0719-B3AA873BC6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A32338FD-10C9-0F1F-0719-B3AA873BC6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A32338FD-10C9-0F1F-0719-B3AA873BC6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A32338FD-10C9-0F1F-0719-B3AA873BC6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1234567-89AB-CDEF-0123-456789ABCDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1234567-89AB-CDEF-0123-456789ABCDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1234567-89AB-CDEF-0123-456789ABCDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1234567-89AB-CDEF-0123-456789ABCDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9191A52E-382D-4E63-83C3-E5600526B2BF}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,53 @@
+name: "Generic Momentum Strategy"
+description: "Configurable momentum-based trading strategy for any symbol"
+symbol: "AAPL" # Can be overridden via CLI
+enabled: true
+
+risk_management:
+  budget_gbp: 1000
+  risk_per_attempt_gbp: 100
+  max_position_size_percent: 5
+  stop_loss_percent: 3
+  take_profit_percent: 8
+
+entry_conditions:
+  - type: "price_momentum"
+    parameters:
+      timeframe: "5m"
+      momentum_threshold: 0.015
+      volume_increase: 2.0
+      min_price: 10.0
+  
+  - type: "technical_indicator"
+    parameters:
+      indicator: "macd"
+      condition: "bullish_crossover"
+  
+  - type: "volume_spike"
+    parameters:
+      spike_multiplier: 3.0
+      timeframe: "15m"
+
+exit_conditions:
+  - type: "stop_loss"
+    parameters:
+      percent: 3
+      trailing: true
+  
+  - type: "take_profit"
+    parameters:
+      percent: 8
+  
+  - type: "time_based"
+    parameters:
+      max_hold_hours: 24
+
+data_sources:
+  price_feed: "alpha_vantage"
+  news_feed: "news_api"
+  
+trading:
+  mode: "demo"
+  broker: "simulator"
+  order_type: "limit"
+  limit_offset_percent: 0.1
